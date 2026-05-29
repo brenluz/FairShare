@@ -25,6 +25,7 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+    @Transactional
     public User register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new UserAlreadyExistsException("Email already in use");
