@@ -19,32 +19,21 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "expenses")
-public class Expense {
+@Table(name = "expense_splits")
+public class ExpenseSplit {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    @ManyToOne
+    @JoinColumn(name="expense_id", nullable = false)
+    private Expense expense;
 
     @ManyToOne
-    @JoinColumn(name="paid_by", nullable = false)
-    private User paidBy;
-
-    @ManyToOne
-    @JoinColumn(name="group_id")
-    private Group group;
+    @JoinColumn(name="user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false)
-    private String description;
+    private BigDecimal owedAmount;
 
-    @Column(nullable = false)
-    private BigDecimal amount;
-
-    @Column
-    private SplitType splitType;
 }
