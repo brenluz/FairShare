@@ -45,6 +45,7 @@ public class Expense {
     @Column(nullable = false)
     private BigDecimal amount;
 
-    @Column
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(20)")
     private SplitType splitType;
 }

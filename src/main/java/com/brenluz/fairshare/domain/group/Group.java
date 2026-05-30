@@ -11,6 +11,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -40,4 +42,7 @@ public class Group {
     @ManyToOne
     @JoinColumn(name="created_by", nullable = false)
     private User createdBy;
+
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<GroupMember> members = new ArrayList<>();
 }
