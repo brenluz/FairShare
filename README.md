@@ -95,7 +95,7 @@ The core feature of FairShare. Given a group where members owe each other arbitr
 **1. Clone the repo**
 ```bash
 git clone https://github.com/brenluz/fairshare-backend
-cd fairshare-backend
+cd FairShare
 ```
 
 **2. Start infrastructure**
