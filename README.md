@@ -146,5 +146,6 @@ src/main/java/com/brenluz/fairshare/
 - [ ] Guest access via shareable group link (no account required)
 - [ ] Angular frontend
 - [ ] Push notifications via Kafka consumer service
+- [ ] Proof of payment upload for settlements 
 
 ---

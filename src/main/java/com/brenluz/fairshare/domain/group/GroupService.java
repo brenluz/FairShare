@@ -1,5 +1,6 @@
 package com.brenluz.fairshare.domain.group;
 
+import com.brenluz.fairshare.api.dto.request.CreateGroupRequest;
 import com.brenluz.fairshare.domain.user.User;
 import com.brenluz.fairshare.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +19,13 @@ public class GroupService {
     private final GroupMemberRepository groupMemberRepository;
 
     @Transactional
-    public Group createGroup(String name, String description, String email){
+    public Group createGroup(CreateGroupRequest request, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Group group = Group.builder()
-                .name(name)
-                .description(description)
+                .name(request.name())
+                .description(request.description())
                 .createdBy(user)
                 .build();
 

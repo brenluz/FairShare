@@ -25,7 +25,7 @@ public class GroupController {
                         .getAuthentication())
                         .getName();
 
-        Group group = groupService.createGroup(request.name(), request.description(), email);
+        Group group = groupService.createGroup(request, email);
         return GroupDetailResponse.from(group);
     }
 
