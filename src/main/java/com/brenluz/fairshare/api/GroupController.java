@@ -19,7 +19,7 @@ import java.util.UUID;
 public class GroupController {
     private final GroupService groupService;
 
-    @PostMapping("/")
+    @PostMapping()
     public GroupDetailResponse createGroup(@RequestBody CreateGroupRequest request) {
         String email = Objects.requireNonNull(SecurityContextHolder.getContext()
                         .getAuthentication())
@@ -29,7 +29,7 @@ public class GroupController {
         return GroupDetailResponse.from(group);
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public List<GroupSummaryResponse> getUserGroups(){
         String email = Objects.requireNonNull(SecurityContextHolder.getContext()
                         .getAuthentication())

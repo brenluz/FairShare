@@ -12,6 +12,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -48,4 +50,7 @@ public class Expense {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar(20)")
     private SplitType splitType;
+
+    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
+    private List<ExpenseSplit> splits = new ArrayList<>();
 }
