@@ -85,7 +85,8 @@ public class ExpenseService {
 
         expenseSplitRepository.saveAll(splits);
 
-        return expense;
+        return expenseRepository.findById(expense.getId())
+                .orElseThrow(() -> new RuntimeException("Expense not found"));
     }
 
     @Transactional(readOnly = true)

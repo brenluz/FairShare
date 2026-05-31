@@ -51,6 +51,7 @@ public class Expense {
     @Column(columnDefinition = "varchar(20)")
     private SplitType splitType;
 
-    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
+    @Builder.Default
+    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ExpenseSplit> splits = new ArrayList<>();
 }
