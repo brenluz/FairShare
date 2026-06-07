@@ -2,6 +2,7 @@ package com.brenluz.fairshare.domain.settlement;
 
 import com.brenluz.fairshare.algorithm.DebtSimplifier;
 import com.brenluz.fairshare.algorithm.DebtTransaction;
+import com.brenluz.fairshare.api.dto.request.SettleDebtRequest;
 import com.brenluz.fairshare.domain.expense.Expense;
 import com.brenluz.fairshare.domain.expense.ExpenseRepository;
 import com.brenluz.fairshare.domain.expense.ExpenseSplit;
@@ -51,16 +52,16 @@ public class SettlementService {
         return DebtSimplifier.simplify(balances);
     }
 
-    public Settlement settleDebt(UUID groupId, UUID payeeId, BigDecimal amount, String payerEmail) {
+    public Settlement settleDebt(UUID groupId, SettleDebtRequest request, String payerEmail) {
         User payer = userRepository.findByEmail(payerEmail).orElseThrow(() -> new RuntimeException("User not found"));
-        User payee = userRepository.findById(payeeId).orElseThrow(() -> new RuntimeException("User not found"));
+        User payee = userRepository.findById(request.payeeId()).orElseThrow(() -> new RuntimeException("User not found"));
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
 
         Settlement settlement = Settlement.builder()
                 .payer(payer)
                 .payee(payee)
                 .group(group)
-                .amount(amount)
+                .amount(request.amount())
                 .build();
 
         return settlementRepository.save(settlement);
