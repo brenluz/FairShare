@@ -114,7 +114,7 @@ This starts PostgreSQL, Redis, Kafka, and Zookeeper.
 http://localhost:8080/swagger-ui.html
 ```
 
-Register a user, click **Authorize**, paste the JWT token, and explore the API.
+Register a user, click **Authorize**, paste the JWT token.
 
 ---
 
