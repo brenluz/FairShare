@@ -3,6 +3,7 @@ package com.brenluz.fairshare.domain.group;
 import com.brenluz.fairshare.api.dto.request.CreateGroupRequest;
 import com.brenluz.fairshare.domain.user.User;
 import com.brenluz.fairshare.domain.user.UserRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final GroupMemberRepository groupMemberRepository;
+    private final EntityManager entityManager;
 
     @Transactional
     public Group createGroup(CreateGroupRequest request, String email) {
@@ -37,7 +39,11 @@ public class GroupService {
                 .build();
         groupMemberRepository.save(member);
 
-        return saved;
+        entityManager.flush();
+        entityManager.clear();
+
+        return groupRepository.findById(saved.getId())
+                .orElseThrow(() -> new RuntimeException("Group not found"));
     }
 
     @Transactional(readOnly = true)
