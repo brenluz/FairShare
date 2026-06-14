@@ -5,6 +5,7 @@ import com.brenluz.fairshare.api.dto.response.ExpenseResponse;
 import com.brenluz.fairshare.domain.expense.Expense;
 import com.brenluz.fairshare.domain.expense.ExpenseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class ExpenseController {
     private final ExpenseService expenseService;
 
     @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
     public ExpenseResponse addExpense(@RequestBody AddExpenseRequest request, @PathVariable UUID id) {
         String email = Objects.requireNonNull(SecurityContextHolder.getContext()
                         .getAuthentication())

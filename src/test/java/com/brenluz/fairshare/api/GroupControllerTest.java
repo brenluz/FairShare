@@ -96,7 +96,7 @@ class GroupControllerTest {
 
     @Test
     @WithMockUser(username = "ana@test.com")
-    void shouldReturn200AndCreatedGroup_When_AuthenticatedUserCreatesGroup() throws Exception {
+    void shouldReturn201AndCreatedGroup_When_AuthenticatedUserCreatesGroup() throws Exception {
         when(groupService.createGroup(any(), eq("ana@test.com"))).thenReturn(group);
 
         String body = """
@@ -109,7 +109,7 @@ class GroupControllerTest {
         mockMvc.perform(post("/api/groups")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Trip to Bahia"));
     }
 

@@ -59,7 +59,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void shouldReturn200AndToken_When_RegisterIsSuccessful() throws Exception {
+    void shouldReturn201AndToken_When_RegisterIsSuccessful() throws Exception {
         User user = buildUser();
         when(userService.register(any())).thenReturn(user);
         when(jwtUtil.generateToken("ana@test.com")).thenReturn("mocked-jwt-token");
@@ -75,7 +75,7 @@ class AuthControllerTest {
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.token").value("mocked-jwt-token"))
                 .andExpect(jsonPath("$.email").value("ana@test.com"))
                 .andExpect(jsonPath("$.username").value("ana"));

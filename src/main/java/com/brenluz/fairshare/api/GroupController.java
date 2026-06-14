@@ -6,6 +6,7 @@ import com.brenluz.fairshare.api.dto.response.GroupSummaryResponse;
 import com.brenluz.fairshare.domain.group.Group;
 import com.brenluz.fairshare.domain.group.GroupService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ public class GroupController {
     private final GroupService groupService;
 
     @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
     public GroupDetailResponse createGroup(@RequestBody CreateGroupRequest request) {
         String email = Objects.requireNonNull(SecurityContextHolder.getContext()
                         .getAuthentication())
