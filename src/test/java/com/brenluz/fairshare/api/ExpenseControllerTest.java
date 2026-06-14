@@ -113,7 +113,7 @@ class ExpenseControllerTest {
         mockMvc.perform(post("/api/groups/{id}/expenses", group.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.description").value("Dinner"))
                 .andExpect(jsonPath("$.amount").value(100.00));
     }

@@ -33,7 +33,7 @@ class ExpenseFlowIntegrationTest extends AbstractIntegrationTest {
         MvcResult result = mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         return objectMapper.readTree(result.getResponse().getContentAsString())
@@ -53,7 +53,7 @@ class ExpenseFlowIntegrationTest extends AbstractIntegrationTest {
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         return objectMapper.readTree(result.getResponse().getContentAsString())
@@ -92,7 +92,7 @@ class ExpenseFlowIntegrationTest extends AbstractIntegrationTest {
                         .header("Authorization", "Bearer " + anaToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(expenseBody))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.description").value("Hotel"))
                 .andExpect(jsonPath("$.amount").value(200.00))
                 .andReturn();
