@@ -1,0 +1,1 @@
+ALTER TABLE groups ADD COLUMN invite_token UUID NOT NULL DEFAULT uuid_generate_v4() UNIQUE;

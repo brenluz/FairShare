@@ -62,4 +62,31 @@ public class GroupService {
     public Optional<Group> findById(UUID id) {
         return groupRepository.findById(id);
     }
+
+    @Transactional(readOnly = true)
+    public Group findByInviteToken(UUID token) {
+        return groupRepository.findByInviteToken(token).orElseThrow(() -> new RuntimeException("Group not found"));
+    }
+
+    @Transactional
+    public Group joinGroupByToken(UUID token, String email){
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        Group group = groupRepository.findByInviteToken(token).orElseThrow(() -> new RuntimeException("Group not found"));
+
+        boolean alreadyMember = group.getMembers().stream()
+                .anyMatch(m -> m.getUser().getId().equals(user.getId()));
+        if (alreadyMember) {
+            return group;
+        }
+
+        GroupMember groupMember = GroupMember.builder()
+                .group(group)
+                .user(user)
+                .build();
+
+        groupMemberRepository.save(groupMember);
+        
+        return groupRepository.findById(group.getId())
+                .orElseThrow(() -> new RuntimeException("Group not found"));
+    }
 }

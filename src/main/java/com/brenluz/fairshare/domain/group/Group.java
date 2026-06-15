@@ -39,6 +39,10 @@ public class Group {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private UUID inviteToken = UUID.randomUUID();
+
     @ManyToOne
     @JoinColumn(name="created_by", nullable = false)
     private User createdBy;
