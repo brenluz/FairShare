@@ -31,6 +31,23 @@ public class GroupController {
         return GroupDetailResponse.from(group);
     }
 
+    @PostMapping("/join/{token}")
+    public GroupDetailResponse joinGroup(@PathVariable UUID token) {
+        String email = Objects.requireNonNull(SecurityContextHolder.getContext()
+                        .getAuthentication())
+                        .getName();
+        Group group = groupService.joinGroupByToken(token, email);
+        return GroupDetailResponse.from(group);
+    }
+
+    @GetMapping("/{id}/invite")
+    public String invite(@PathVariable UUID id) {
+        String email = Objects.requireNonNull(SecurityContextHolder.getContext()
+                        .getAuthentication())
+                .getName();
+        return groupService.getInviteLink(id, email);
+    }
+
     @GetMapping()
     public List<GroupSummaryResponse> getUserGroups(){
         String email = Objects.requireNonNull(SecurityContextHolder.getContext()

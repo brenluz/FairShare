@@ -27,8 +27,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Import({SecurityConfig.class, PasswordEncoderConfig.class})
 @WebMvcTest(GroupController.class)
@@ -125,6 +124,41 @@ class GroupControllerTest {
         mockMvc.perform(post("/api/groups")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "ana@test.com")
+    void shouldReturn200_When_AuthenticatedUserJoinsGroup() throws Exception {
+        when(groupService.joinGroupByToken(any(), eq("ana@test.com"))).thenReturn(group);
+
+        mockMvc.perform(post("/api/groups/join/{token}", UUID.randomUUID())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Trip to Bahia"));;
+    }
+
+    @Test
+    void shouldReturn401_When_UnauthenticatedUserTriesToJoinGroup() throws Exception {
+        mockMvc.perform(post("/api/groups/join/{token}", UUID.randomUUID()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "ana@test.com")
+    void shouldReturn200_When_AuthenticatedUserRequestsInviteLink() throws Exception {
+        String expectedLink = "http://localhost:8080/api/groups/join/" + UUID.randomUUID();
+        when(groupService.getInviteLink(eq(group.getId()), eq("ana@test.com"))).thenReturn(expectedLink);
+        mockMvc.perform(get("/api/groups/{id}/invite", group.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(expectedLink));;
+    }
+
+    @Test
+    void shouldReturn401_When_UnauthenticatedUserRequestsInviteLink() throws Exception {
+        mockMvc.perform(get("/api/groups/{id}/invite", UUID.randomUUID())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
 }

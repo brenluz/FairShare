@@ -67,11 +67,21 @@ class ExpenseFlowIntegrationTest extends AbstractIntegrationTest {
         String bobToken = registerAndGetToken("bob_flow", "bob_flow@integrationtest.com", "password123");
 
         // Step 2 — Get bob's user ID from his own group list (we'll need it for settling)
-        // First bob needs to create something so we can find him, but actually
-        // we can get his ID from the group members after ana adds him
-        // For now ana creates the group
         String groupId = createGroupAndGetId(anaToken, "Integration Test Trip", "Full flow test");
 
+        MvcResult inviteResult = mockMvc.perform(get("/api/groups/{id}/invite", groupId)
+                        .header("Authorization", "Bearer " + anaToken))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String inviteLink = inviteResult.getResponse().getContentAsString();
+        String inviteToken = inviteLink.substring(inviteLink.lastIndexOf("/") + 1);
+
+        // Bob joins via invite link
+        mockMvc.perform(post("/api/groups/join/{token}", inviteToken)
+                        .header("Authorization", "Bearer " + bobToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.members.length()").value(2));
         // Step 3 — Verify the group was created
         mockMvc.perform(get("/api/groups/{id}", groupId)
                         .header("Authorization", "Bearer " + anaToken))

@@ -68,6 +68,22 @@ public class GroupService {
         return groupRepository.findByInviteToken(token).orElseThrow(() -> new RuntimeException("Group not found"));
     }
 
+    @Transactional(readOnly = true)
+    public String getInviteLink(UUID groupId, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new RuntimeException("Group not found"));
+
+        boolean isMember = group.getMembers().stream()
+                .anyMatch(m -> m.getUser().getId().equals(user.getId()));
+        if (!isMember) {
+            throw new RuntimeException("You are not a member of this group");
+        }
+
+        return "http://localhost:8080/api/groups/join/" + group.getInviteToken();
+    }
+
     @Transactional
     public Group joinGroupByToken(UUID token, String email){
         User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
@@ -85,6 +101,9 @@ public class GroupService {
                 .build();
 
         groupMemberRepository.save(groupMember);
+
+        entityManager.flush();
+        entityManager.clear();
         
         return groupRepository.findById(group.getId())
                 .orElseThrow(() -> new RuntimeException("Group not found"));
